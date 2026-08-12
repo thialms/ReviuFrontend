@@ -1,5 +1,6 @@
 import { OnboardingData } from '@/data/onboarding';
-import { View, StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, TouchableWithoutFeedback, FlatList, Image, useWindowDimensions } from 'react-native'
+import { Route, Router } from 'expo-router';
+import { StyleSheet, TouchableOpacityProps, TouchableWithoutFeedback, FlatList, useWindowDimensions } from 'react-native'
 import Animated, { AnimatedRef, interpolateColor, SharedValue, useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated';
 
 type ButtonProps = TouchableOpacityProps & {
@@ -11,9 +12,10 @@ type Props = {
   flatlistIndex: SharedValue<number>;
   flatlistRef: AnimatedRef<FlatList<OnboardingData>>;
   x: SharedValue<number>;
+  onFinish: () => void; 
 }
 
-export const OnboardingButton = ({ dataLength, flatlistIndex, flatlistRef, x }: Props) => {
+export const OnboardingButton = ({ dataLength, flatlistIndex, flatlistRef, x, onFinish }: Props) => { // <-- 2. Receba a prop
   const {width: SCREEN_WIDTH} = useWindowDimensions();
 
   const buttonAnimationStyle = useAnimatedStyle(() => {
@@ -78,8 +80,8 @@ export const OnboardingButton = ({ dataLength, flatlistIndex, flatlistRef, x }: 
       onPress={() => {
         if(flatlistIndex.value < dataLength -1){
           flatlistRef.current?.scrollToIndex({index: flatlistIndex.value + 1})
-        } else{
-          console.log("NAVEGUE PARA A PRÓXIMA TELA")
+        } else {
+          onFinish(); 
         }
       }}
     >
@@ -113,7 +115,7 @@ const styles = StyleSheet.create({
   },
   textButtonOnboarding: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 18,
     position: 'absolute'
   }
 })

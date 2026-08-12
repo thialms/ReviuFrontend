@@ -1,13 +1,24 @@
 import { Stack } from 'expo-router';
-import { useFonts, Inter_400Regular, Inter_600SemiBold } from '@expo-google-fonts/inter';
+import { ThemeProvider, DefaultTheme } from '@react-navigation/native';
 
 export default function RootLayout() {
-  const [loaded] = useFonts({
-    Inter_400Regular,
-    Inter_600SemiBold,
-  });
+  const MyTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: '#3772FF', 
+    },
+  };
 
-  if (!loaded) return null;
-
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <ThemeProvider value={MyTheme}>
+      <Stack 
+        screenOptions={{ 
+          headerShown: false,
+          animation: 'none', 
+          contentStyle: { backgroundColor: '#3772FF' } 
+        }} 
+      />
+    </ThemeProvider>
+  );
 }
