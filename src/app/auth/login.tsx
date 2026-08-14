@@ -11,9 +11,9 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Input } from '@/components/Input';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
-import { router } from 'expo-router';
+import { router } from 'expo-router'; 
 
-export default function Signup() {
+export default function Login() {
   const insets = useSafeAreaInsets();
 
   return (
@@ -32,30 +32,12 @@ export default function Signup() {
             entering={FadeInDown.delay(100).duration(500).springify()} 
             style={styles.header}
           >
-            <Text style={styles.title}>Criar Conta</Text>
-            <Text style={styles.subtitle}>Preencha seus dados para começar</Text>
+            <Text style={styles.title}>Bem-vindo de volta!</Text>
+            <Text style={styles.subtitle}>Faça login para continuar</Text>
           </Animated.View>
 
           <View style={styles.formContainer}>
             <Animated.View entering={FadeInDown.delay(200).duration(500).springify()}>
-              <Input 
-                label="Nome Completo"
-                iconName="user"
-                placeholder="Ex: João da Silva" 
-                autoCapitalize="words"
-              />
-            </Animated.View>
-            
-            <Animated.View entering={FadeInDown.delay(300).duration(500).springify()}>
-              <Input 
-                label="Nome de Usuário"
-                iconName="at-sign"
-                placeholder="Ex: joao.silva" 
-                autoCapitalize="none"
-              />
-            </Animated.View>
-            
-            <Animated.View entering={FadeInDown.delay(400).duration(500).springify()}>
               <Input 
                 label="E-mail"
                 iconName="mail"
@@ -65,7 +47,7 @@ export default function Signup() {
               />
             </Animated.View>
             
-            <Animated.View entering={FadeInDown.delay(500).duration(500).springify()}>
+            <Animated.View entering={FadeInDown.delay(300).duration(500).springify()}>
               <Input 
                 label="Senha"
                 iconName="lock"
@@ -73,29 +55,27 @@ export default function Signup() {
                 secureTextEntry={true} 
               />
             </Animated.View>
-            
-            <Animated.View entering={FadeInDown.delay(600).duration(500).springify()}>
-              <Input 
-                label="Confirmar Senha"
-                iconName="check-circle"
-                placeholder="••••••••" 
-                secureTextEntry={true} 
-              />
+
+            {/* Esqueci a senha animado */}
+            <Animated.View entering={FadeInDown.delay(400).duration(500).springify()}>
+              <TouchableOpacity style={styles.forgotPassword}>
+                <Text style={styles.forgotPasswordText}>Esqueceu a senha?</Text>
+              </TouchableOpacity>
             </Animated.View>
 
-            <Animated.View entering={FadeInDown.delay(700).duration(500).springify()}>
+            <Animated.View entering={FadeInDown.delay(500).duration(500).springify()}>
               <TouchableOpacity style={styles.button} activeOpacity={0.8}>
-                <Text style={styles.buttonText}>CADASTRAR</Text>
+                <Text style={styles.buttonText}>ENTRAR</Text>
               </TouchableOpacity>
             </Animated.View>
 
             <Animated.View 
-              entering={FadeInUp.delay(800).duration(500).springify()} 
+              entering={FadeInUp.delay(600).duration(500).springify()} 
               style={styles.loginRedirect}
             >
-              <Text style={styles.redirectText}>Já tem uma conta? </Text>
-              <TouchableOpacity onPress={() => router.push('/login')}>
-                <Text style={styles.redirectLink}>Faça Login</Text>
+              <Text style={styles.redirectText}>Não tem uma conta? </Text>
+              <TouchableOpacity onPress={() => router.push('/auth/signup')}>
+                <Text style={styles.redirectLink}>Cadastre-se</Text>
               </TouchableOpacity>
             </Animated.View>
 
@@ -118,19 +98,19 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 40,
+    paddingTop: 80, 
     paddingBottom: 40,
   },
   header: {
     alignItems: 'center',
-    marginBottom: 30,
-    marginTop: -20,
+    marginBottom: 50,
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
     color: '#FFFFFF',
     marginBottom: 8,
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
@@ -140,6 +120,15 @@ const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
   },
+  forgotPassword: {
+    alignSelf: 'flex-end',
+    marginBottom: 30,
+  },
+  forgotPasswordText: {
+    color: '#E6E8E6',
+    fontSize: 14,
+    fontWeight: '600',
+  },
   button: {
     width: '100%',
     height: 56,
@@ -147,7 +136,6 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
     marginBottom: 30,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },

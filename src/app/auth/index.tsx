@@ -22,7 +22,7 @@ const VIEWABILITY_CONFIG = {
 
 const Index = () => {
 
-  // return <Redirect href="/signup" />;
+  return <Redirect href="/drawer/home" />;
 
   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = useWindowDimensions();
 
@@ -50,7 +50,7 @@ const Index = () => {
   });
 
   const navigateToLogin = useCallback(() => {
-    router.push('/signup')
+    router.push('/auth/signup')
   }, []);
 
   const handleOnboardingFinish = useCallback(() => {
