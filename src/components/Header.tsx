@@ -11,12 +11,8 @@ const Header = ({ backgroundColor = '#E6E8E6', iconColor = '#3772FF' }: HeaderPr
   return (
     <View style={[styles.container, { backgroundColor }]}>
       <View style={styles.header}>
-        <View style={styles.spacer} />
-
-        <View style={styles.actions}>
-          <Feather name="bell" size={22} color={iconColor} />
-          <Image source={{ uri: 'https://github.com/thialms.png' }} style={styles.img} />
-        </View>
+        <Feather name="bell" size={22} color={iconColor} />
+        <Image source={{ uri: 'https://github.com/thialms.png' }} style={styles.img} />
       </View>
     </View>
   )
@@ -36,15 +32,10 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
   },
   spacer: {
     width: 0,
-  },
-  actions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
   },
   img: {
     width: 54,
