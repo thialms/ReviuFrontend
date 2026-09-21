@@ -1,24 +1,10 @@
-import { Stack } from 'expo-router';
-import { ThemeProvider, DefaultTheme } from '@react-navigation/native';
+import { Stack } from "expo-router";
+import { View } from "react-native";
 
-export default function RootLayout() {
-  const MyTheme = {
-    ...DefaultTheme,
-    colors: {
-      ...DefaultTheme.colors,
-      background: '#3772FF', 
-    },
-  };
-
+export default function Layout() {
   return (
-    <ThemeProvider value={MyTheme}>
-      <Stack 
-        screenOptions={{ 
-          headerShown: false,
-          animation: 'none', 
-          contentStyle: { backgroundColor: '#3772FF' } 
-        }} 
-      />
-    </ThemeProvider>
+    <View style={{ flex: 1, backgroundColor: "#E6E8E6" }}>
+      <Stack screenOptions={{ headerShown: false }} />
+    </View>
   );
 }

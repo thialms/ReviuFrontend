@@ -1,17 +1,23 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { DrawerToggleButton } from '@react-navigation/drawer'
+import { Feather } from '@expo/vector-icons';
+import React from 'react';
+import { Image, StyleSheet, View } from 'react-native';
 
-type Props = {}
+type HeaderProps = {
+  backgroundColor?: string;
+  iconColor?: string;
+}
 
-const Header = (props: Props) => {
+const Header = ({ backgroundColor = '#E6E8E6', iconColor = '#3772FF' }: HeaderProps) => {
   return (
-    <View style={styles.container}>
-        <View style={styles.header}>
-            <DrawerToggleButton />
+    <View style={[styles.container, { backgroundColor }]}>
+      <View style={styles.header}>
+        <View style={styles.spacer} />
 
-            <Image source={{ uri: "https://github.com/thialms.png"}} style={styles.img}/>
+        <View style={styles.actions}>
+          <Feather name="bell" size={22} color={iconColor} />
+          <Image source={{ uri: 'https://github.com/thialms.png' }} style={styles.img} />
         </View>
+      </View>
     </View>
   )
 }
@@ -19,21 +25,30 @@ const Header = (props: Props) => {
 export default Header
 
 const styles = StyleSheet.create({
-    container:{
-        flex: 1,
-        padding: 30,
-        paddingTop: 80,
-        backgroundColor: '#E6E8E6'
-    },
-    header: {
-        width: '100%',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    img: {
-        width: 50,
-        height: 50,
-        borderRadius: 30
-    }
+  container: {
+    width: '100%',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    paddingBottom: 12,
+    backgroundColor: '#E6E8E6',
+  },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  spacer: {
+    width: 0,
+  },
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  img: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+  },
 })

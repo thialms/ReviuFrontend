@@ -1,20 +1,95 @@
-import React from 'react';
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  ScrollView, 
-  KeyboardAvoidingView, 
-  Platform, 
-  TouchableOpacity 
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Input } from '@/components/Input';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { API_URL, getApiErrorMessage } from '@/services/api';
 import { router } from 'expo-router';
+import React from 'react';
+import {
+    ActivityIndicator,
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function Signup() {
   const insets = useSafeAreaInsets();
+  const [name, setName] = React.useState('');
+  const [username, setUsername] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  const handleSignup = async () => {
+    const normalizedName = name.trim();
+    const normalizedUsername = username.trim();
+    const normalizedEmail = email.trim().toLowerCase();
+
+    setErrorMessage('');
+
+    if (!normalizedName || !normalizedUsername || !normalizedEmail || !password || !confirmPassword) {
+      setErrorMessage('Preencha todos os campos.');
+      return;
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
+      setErrorMessage('Digite um e-mail válido.');
+      return;
+    }
+
+    if (password.length < 8) {
+      setErrorMessage('A senha deve ter pelo menos 8 caracteres.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setErrorMessage('As senhas não coincidem.');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: normalizedName,
+          username: normalizedUsername,
+          email: normalizedEmail,
+          password,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(await getApiErrorMessage(response));
+      }
+
+      Alert.alert(
+        'Conta criada',
+        'Verifique seu e-mail para ativar a conta.',
+        [{ text: 'OK', onPress: () => router.replace('/auth/login') }],
+      );
+    } catch (error) {
+      setErrorMessage(
+        error instanceof TypeError
+          ? 'Não foi possível conectar ao servidor.'
+          : error instanceof Error
+            ? error.message
+            : 'Não foi possível criar sua conta.',
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <View style={[styles.safeArea, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
@@ -43,6 +118,9 @@ export default function Signup() {
                 iconName="user"
                 placeholder="Ex: João da Silva" 
                 autoCapitalize="words"
+                value={name}
+                onChangeText={setName}
+                editable={!isSubmitting}
               />
             </Animated.View>
             
@@ -52,6 +130,9 @@ export default function Signup() {
                 iconName="at-sign"
                 placeholder="Ex: joao.silva" 
                 autoCapitalize="none"
+                value={username}
+                onChangeText={setUsername}
+                editable={!isSubmitting}
               />
             </Animated.View>
             
@@ -62,6 +143,9 @@ export default function Signup() {
                 placeholder="Ex: joao@email.com" 
                 keyboardType="email-address"
                 autoCapitalize="none"
+                value={email}
+                onChangeText={setEmail}
+                editable={!isSubmitting}
               />
             </Animated.View>
             
@@ -71,6 +155,9 @@ export default function Signup() {
                 iconName="lock"
                 placeholder="••••••••" 
                 secureTextEntry={true} 
+                value={password}
+                onChangeText={setPassword}
+                editable={!isSubmitting}
               />
             </Animated.View>
             
@@ -80,12 +167,26 @@ export default function Signup() {
                 iconName="check-circle"
                 placeholder="••••••••" 
                 secureTextEntry={true} 
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                editable={!isSubmitting}
               />
             </Animated.View>
 
+            {errorMessage ? <Text style={styles.errorMessage}>{errorMessage}</Text> : null}
+
             <Animated.View entering={FadeInDown.delay(700).duration(500).springify()}>
-              <TouchableOpacity style={styles.button} activeOpacity={0.8}>
-                <Text style={styles.buttonText}>CADASTRAR</Text>
+              <TouchableOpacity
+                style={[styles.button, isSubmitting && styles.buttonDisabled]}
+                activeOpacity={0.8}
+                onPress={handleSignup}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <ActivityIndicator color="#333333" />
+                ) : (
+                  <Text style={styles.buttonText}>CADASTRAR</Text>
+                )}
               </TouchableOpacity>
             </Animated.View>
 
@@ -160,6 +261,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     letterSpacing: 0.8,
+  },
+  buttonDisabled: {
+    opacity: 0.7,
+  },
+  errorMessage: {
+    color: '#FFE1E1',
+    fontSize: 14,
+    marginBottom: 16,
+    textAlign: 'center',
   },
   loginRedirect: {
     flexDirection: 'row',
